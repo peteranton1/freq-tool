@@ -15,9 +15,9 @@ func main() {
 	c.Parse(os.Args)
 
 	fmt.Printf("Runtime Parameters: "+
-	    "\n\tModes = %s "+
-	    "\n\tfiles = %s "+
-	    "\n\tvars = %s\n",
+	    "\n\tModes = %v "+
+	    "\n\tfiles = %v "+
+	    "\n\tvars = %v\n",
 	    c.Modes, c.Files, c.Vars)
 
 }

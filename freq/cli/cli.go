@@ -4,17 +4,33 @@ import (
     "flag"
     "fmt"
     "os"
+    "strings"
 )
 
 type Cli struct {
-    Modes       string
-    Files       string
-    Vars        string
+    Modes       []string
+    Files       []string
+    Vars        []string
 }
 
 func New() *Cli {
-    c := &Cli{  Modes: "fixed", Files: "", Vars: ""}
+    c := &Cli{  Modes: []string{}, Files: []string{}, Vars: []string{}}
     return c
+}
+
+func SafeSplit(value string, sep string) []string {
+    outVal := []string{}
+    temp := strings.Split(value, sep)
+    outVal = append(temp)
+    return outVal
+}
+
+func usage() {
+    fmt.Println(
+            "Usage: \n\t<prog> <modes> -f <files> -v <vars>\n" +
+            "e.g.: \n\t<prog> fixed -f /some/path -v 11:12\n")
+    flag.PrintDefaults()
+    os.Exit(1)
 }
 
 func (c *Cli) Parse(args []string) {
@@ -22,43 +38,37 @@ func (c *Cli) Parse(args []string) {
     // Subcommands
     fixedCommand := flag.NewFlagSet("fixed", flag.ExitOnError)
 
-    filesPtr := fixedCommand.String("files",
-                    "", "files <path>(,<path>)*")
-    varsPtr := fixedCommand.String("vars",
-                    "", "vars <start:end>(,<start:end>)*")
+    filesPtr := fixedCommand.String("f",
+                    "", "-f files <path>(,<path>)*")
+    varsPtr := fixedCommand.String("v",
+                    "", "-v vars <start:end>(,<start:end>)*")
 
     if len(args) < 2 {
-        fmt.Println(
-            "Usage: \n\t<prog> <modes> <files> <vars>\n" +
-            "e.g.: \n\t<prog> fixed -files /some/path -vars 11:12\n")
-        os.Exit(1)
+        usage()
     }
 
-    switch args[1] {
+    modes := SafeSplit(args[1],",")
+    switch modes[0] {
     case "fixed":
         fixedCommand.Parse(args[2:])
     default:
-        flag.PrintDefaults()
-        os.Exit(1)
+        usage()
     }
 
     if fixedCommand.Parsed() {
         // Required Flags
         if *filesPtr == "" || *varsPtr == "" {
-            fmt.Println(
-                "Usage: \t<prog> <modes> <files> <vars>");
             if *filesPtr == "" {
-                fmt.Println("\tNo file(s) specified")
+                fmt.Println("\tNo file(s) specified -f")
             }
             if *varsPtr == "" {
-                fmt.Println("\tNo variable(s) specified")
+                fmt.Println("\tNo variable(s) specified -v")
             }
-            fixedCommand.PrintDefaults()
-            os.Exit(1)
+            usage()
         }
         // extract field values
-        c.Modes = args[1]
-        c.Files = *filesPtr
-        c.Vars = *varsPtr
+        c.Modes = append(c.Modes, args[1])
+        c.Files = append(c.Files, *filesPtr)
+        c.Vars = append(c.Vars, *varsPtr)
     }
 }
