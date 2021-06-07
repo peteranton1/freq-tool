@@ -8,7 +8,6 @@ public class ScenarioContext {
     public enum ScenarioKeys {
         FDP_testData,
         FDP_fixedDataConfig,
-        FDP_underTest,
         FDP_actual;
     }
 

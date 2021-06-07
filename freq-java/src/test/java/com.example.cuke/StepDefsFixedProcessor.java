@@ -1,9 +1,6 @@
 package com.example.cuke;
 
-import com.example.freq.Counter;
-import com.example.freq.FixedDataConfig;
-import com.example.freq.FixedDataProcessor;
-import com.example.freq.StringBTree;
+import com.example.freq.*;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
@@ -30,14 +27,16 @@ public class StepDefsFixedProcessor {
     @Given("I have the following data in the reader")
     public void i_have_the_following_data_in_the_reader(DataTable dataTable) {
         scenarioContext.setScenarioValue(FDP_testData,
-                new TestDataTable(dataTable.asMaps()));
+                new TestDataTable(dataTable.asMaps().stream()
+                        .map(m -> m.get("line"))
+                        .collect(Collectors.toList())));
     }
 
     @Given("my columns are {string} to {string}")
     public void my_columns_are_start_to_end(String startCol, String finishCol) {
         FixedDataConfig fixedDataConfig = (FixedDataConfig) scenarioContext
                 .getScenarioValue(FDP_fixedDataConfig);
-        if(fixedDataConfig == null) {
+        if (fixedDataConfig == null) {
             fixedDataConfig = new FixedDataConfig();
         }
         fixedDataConfig.addCols(toInt(startCol), toInt(finishCol));
@@ -55,9 +54,10 @@ public class StepDefsFixedProcessor {
 
         FixedDataProcessor underTest = new FixedDataProcessor();
 
+        StringDataReader dataReader = new StringDataReader(testDataTable
+                .getLines());
         StringBTree actual = (StringBTree) underTest.process(
-                new TestDataReader(testDataTable.getTestData()),
-                fixedDataConfig);
+                dataReader, fixedDataConfig);
 
         scenarioContext.setScenarioValue(FDP_actual, actual);
     }
@@ -83,6 +83,6 @@ public class StepDefsFixedProcessor {
     }
 
     private String wrap(Map<String, String> m) {
-        return String.format("|%s|",m.get("field"));
+        return String.format("|%s|", m.get("field"));
     }
 }
