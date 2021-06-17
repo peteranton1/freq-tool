@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class StringDataRecord implements DataRecord<String> {
     private final String dataValue;
+    private final DataType dataType;
 
     @Override
     public DataType type() {
-        return DataType.FIXED;
+        return dataType;
     }
 
     @Override

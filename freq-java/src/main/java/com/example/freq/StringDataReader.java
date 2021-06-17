@@ -8,16 +8,17 @@ import java.util.List;
 public class StringDataReader implements DataReader<String> {
 
     private final List<String> lines;
-    private int currentPosition =0;
+    private final DataType dataType;
+    private int currentPosition = 0;
 
     @Override
     public DataRecord<String> next() {
         String line = nextLineFromData(currentPosition++);
-        return new StringDataRecord(line);
+        return new StringDataRecord(line, dataType);
     }
 
     private String nextLineFromData(int pos) {
-        if(pos > lines.size()) {
+        if (pos > lines.size()) {
             throw new RuntimeException(String.format(
                     "Data lines insufficient: %d/%d",
                     pos, lines.size()));

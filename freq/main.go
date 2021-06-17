@@ -20,4 +20,5 @@ func main() {
 	    "\n\tvars = %v\n",
 	    c.Modes, c.Files, c.Vars)
 
+    fmt.Printf("Unfortunately not yet implemented.\n")
 }

@@ -55,7 +55,7 @@ public class StepDefsFixedProcessor {
         FixedDataProcessor underTest = new FixedDataProcessor();
 
         StringDataReader dataReader = new StringDataReader(testDataTable
-                .getLines());
+                .getLines(), DataType.FIXED);
         StringBTree actual = (StringBTree) underTest.process(
                 dataReader, fixedDataConfig);
 
