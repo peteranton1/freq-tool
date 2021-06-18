@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"freq/btree"
 	"freq/cli"
 )
 
@@ -20,5 +21,8 @@ func main() {
 	    "\n\tvars = %v\n",
 	    c.Modes, c.Files, c.Vars)
 
-    fmt.Printf("Unfortunately not yet implemented.\n")
+    fmt.Printf("Debug: btree.Show().\n")
+    btree.Show()
+
+    fmt.Printf("Todo: Not yet implemented.\n")
 }
