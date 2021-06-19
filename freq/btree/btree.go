@@ -67,7 +67,7 @@ func (n *BTreeNode) insert(value string) {
     }
 }
 
-func print(w io.Writer, node *BTreeNode, ns int, ch string) {
+func Print(w io.Writer, node *BTreeNode, ns int, ch string) {
     if node == nil {
         return
     }

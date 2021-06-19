@@ -8,12 +8,17 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.assertj.core.api.Assertions;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.example.cuke.ScenarioContext.ScenarioKeys.*;
 import static com.example.cuke.StepDefsUtils.toInt;
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.fail;
 
 @ScenarioScoped
 public class StepDefsFixedProcessor {
@@ -26,6 +31,14 @@ public class StepDefsFixedProcessor {
 
     @Given("I have the following data in the reader")
     public void i_have_the_following_data_in_the_reader(DataTable dataTable) {
+        scenarioContext.setScenarioValue(FDP_testData,
+                new TestDataTable(readLinesFromFiles(dataTable.asMaps().stream()
+                        .map(m -> m.get("file"))
+                        .collect(Collectors.toList()))));
+    }
+
+    @Given("I have the following data read from the files")
+    public void i_have_the_following_data_read_from_the_files(DataTable dataTable) {
         scenarioContext.setScenarioValue(FDP_testData,
                 new TestDataTable(dataTable.asMaps().stream()
                         .map(m -> m.get("line"))
@@ -78,11 +91,23 @@ public class StepDefsFixedProcessor {
                 .isEqualTo(expected.toString());
     }
 
+    private List<String> readLinesFromFiles(List<String> fileList) {
+        List<String> datalines = new ArrayList<>();
+        for (String filepath : fileList) {
+            try {
+                datalines.addAll(Files.readAllLines(Path.of(filepath)));
+            } catch (Exception e) {
+                fail(format("IOError: %s", e.getMessage()), e);
+            }
+        }
+        return datalines;
+    }
+
     private Counter<String> extractStringCounter(Map<String, String> m) {
         return new Counter<>(m.get("field"), toInt(m.get("count")));
     }
 
     private String wrap(Map<String, String> m) {
-        return String.format("|%s|", m.get("field"));
+        return format("|%s|", m.get("field"));
     }
 }
