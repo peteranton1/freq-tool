@@ -3,6 +3,7 @@ package com.example.cuke;
 import com.example.freq.*;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.guice.ScenarioScoped;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -23,26 +24,27 @@ import static org.assertj.core.api.Assertions.fail;
 @ScenarioScoped
 public class StepDefsFixedProcessor {
 
-    private final ScenarioContext scenarioContext;
+    private ScenarioContext scenarioContext;
 
-    public StepDefsFixedProcessor() {
+    @Before
+    public void setUp() {
         scenarioContext = new ScenarioContext();
     }
 
     @Given("I have the following data in the reader")
     public void i_have_the_following_data_in_the_reader(DataTable dataTable) {
         scenarioContext.setScenarioValue(FDP_testData,
-                new TestDataTable(readLinesFromFiles(dataTable.asMaps().stream()
-                        .map(m -> m.get("file"))
-                        .collect(Collectors.toList()))));
+                new TestDataTable(dataTable.asMaps().stream()
+                        .map(m -> m.get("line"))
+                        .collect(Collectors.toList())));
     }
 
     @Given("I have the following data read from the files")
     public void i_have_the_following_data_read_from_the_files(DataTable dataTable) {
         scenarioContext.setScenarioValue(FDP_testData,
-                new TestDataTable(dataTable.asMaps().stream()
-                        .map(m -> m.get("line"))
-                        .collect(Collectors.toList())));
+                new TestDataTable(readLinesFromFiles(dataTable.asMaps().stream()
+                        .map(m -> m.get("file"))
+                        .collect(Collectors.toList()))));
     }
 
     @Given("my columns are {string} to {string}")

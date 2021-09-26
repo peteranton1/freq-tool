@@ -1,14 +1,10 @@
-Feature: Ensure FixedDataProcessor can work
+@Regression @QA2
+Feature: QA2 Ensure FixedDataProcessor works with file data
 
   Background:
-    Given I have the following data in the reader
-      | line                                     |
-      | ABC The Devil in the White City          |
-      | HIG In the Garden of Beasts              |
-      | DEF The Lion, the Witch and the Wardrobe |
-      | ABC The Devil in the White City          |
-      | ABC The Devil in the White City          |
-      | DEF The Lion, the Witch and the Wardrobe |
+    Given I have the following data read from the files
+      | file                                     |
+      | ../data/lion-witch-data.txt              |
 
 
   Scenario: Fields 1: FDP can produce expected result

@@ -1,9 +1,15 @@
-Feature: Ensure FixedDataProcessor can work
+@Regression @QA1
+Feature: QA1 Ensure FixedDataProcessor works with immediate data
 
   Background:
     Given I have the following data in the reader
-      | file                                     |
-      | ../data/lion-witch-data.txt              |
+      | line                                     |
+      | ABC The Devil in the White City          |
+      | HIG In the Garden of Beasts              |
+      | DEF The Lion, the Witch and the Wardrobe |
+      | ABC The Devil in the White City          |
+      | ABC The Devil in the White City          |
+      | DEF The Lion, the Witch and the Wardrobe |
 
 
   Scenario: Fields 1: FDP can produce expected result

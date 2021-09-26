@@ -86,6 +86,8 @@ public class StringReportWriter
     }
 
     private int sumCounters(List<Counter<String>> results) {
-        return results.stream().map(Counter::getCounter).reduce(0, Integer::sum);
+        return results.stream()
+                .map(Counter::getCounter)
+                .reduce(0, Integer::sum);
     }
 }
